@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/erick-soares29/1024a-backend/issues"
   },
-  "homepage": "https://github.com/erick-soares29/1024a-backend#readme"
+  "homepage": "https://github.com/erick-soares29/1024a-backend#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "mysql2": "^3.18.0"
+  }
 }
