@@ -161,9 +161,14 @@ function divisivelPor11(min: number, max: number) {
 // Conteúdo de hoje   => Promisses
 
 //Assincrona?
-function minhaPromessa():Promise<string>{
-    const prom:Promise<string> = new Promise<string>((resolve,reject)=>{
-        setTimeout(()=>reject("Tere Erro"),5000)
+function minhaPromessa():Promise<string|null>{
+    const prom = new Promise<string>((resolve,reject)=>{
+        if(Math.random()>.5){
+            setTimeout(()=>resolve("Tere"),5000)
+        }
+        else{
+            reject(null)
+        }
     })
     return prom
 }
@@ -180,7 +185,13 @@ catch(erro){
     console.log(erro)
 }
 
-
-// Crie uma função que tenha 50% de chance de retornar tere após 
+// Crie uma função PROMISE que tenha 50% de chance de retornar "tere" após 
 // 5 segundos ou a função devolve o valor null
 // function devolveTere()
+
+
+
+// MAP
+// FILTER
+// FIND
+// SPREAD
