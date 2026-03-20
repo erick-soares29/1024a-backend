@@ -10,10 +10,7 @@ const connection = await mysql.createConnection({
 
 // Using placeholders
 try {
-  const queryPrepare = await connection.prepare(
-    'SELECT * FROM `pessoa`'
-  );
-  const results = await queryPrepare.execute([])
+  const results = await connection.execute('SELECT * FROM pessoa')
   console.log(results);
 } catch (err) {
   console.log(err);
