@@ -67,6 +67,35 @@ app.post("/pessoas", async (req, res) => {
         }
     }
 })
+
+/**
+ * No banco de dados 'luademel' crie uma nova tabela chamada produto
+ * Na tabela produto, crie os seguintes atributos:
+ * id INT
+ * nome VARCHAR(300)
+ * categoria VARCHAR(300)
+ * preco DECIMAL(10,2)
+ * data_criacao DATATIME
+ * data_modificacao DATATIME
+ * 
+ * Crie uma rota chamada `cadastro_produto` que eu possa enviar
+ * um JSON para cadastrar um novo produto no banco de dados
+ * 
+ * Crie uma rota chamada `listar_produtos` que retorne todos
+ * os produtos cadastrados no banco de dados
+ * 
+ * Crie uma rota chamada `listar_produtos_informatica` que retorne
+ * todos os produtos da categoria informatica
+ * 
+ * Crie uma rota chamada `listar_produtos_caros` que retorne os produtos
+ * que custem mais de R$: 100,00
+ * 
+ */
+
+
+
+
+
 app.listen(8000, () => {
     console.log("Iniciando o servidor na porta 8000")
 })
