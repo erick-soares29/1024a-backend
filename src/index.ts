@@ -1,14 +1,8 @@
-// Get the client
 import mysql, { type RowDataPacket, type Connection, type ResultSetHeader } from 'mysql2/promise';
-
-//Erro ao passar o id ou o nome
-//status 500
-
 import express from 'express';
 const app = express()
 app.use(express.json())
 
-//Como cria uma rota no express?
 interface IPessoa extends RowDataPacket {
     id: number,
     nome: string,
@@ -23,36 +17,56 @@ const connection = mysql.createPool({
 app.get("/pessoas", async (req, res) => {
     try {
         const [dados, campos] =
-            await connection.execute<IPessoa[]>('SELECT * FROM pessoa')
+            await connection.execute<IPessoa[]>('SELECT * FROM terepessoa')
         res.status(200).json(dados)
     } catch (err) {
-        //TODO:
-        console.log(err);
+        console.log(err)
+        if (err instanceof Error && 'code' in err && err.code === 'ECONNREFUSED') {
+            return res.status(500).json({ mensagem: "ERRO: LIGUE O LARAGON e confira o usuário e senha da conexão" })
+        } else if (err instanceof Error && 'code' in err && err.code === 'ENOTFOUND') {
+            return res.status(500).json({ mensagem: "ERRO: Você digitou algo errado no host da conexão" })
+        } else if (err instanceof Error && 'code' in err && err.code === 'ER_BAD_DB_ERROR') {
+            return res.status(500).json({ mensagem: "ERRO: Confira o nome do banco de dados ou crie um banco com o nome que você passou na conexão" })
+        } else if (err instanceof Error && 'code' in err && err.code === 'ER_ACCESS_DENIED_ERROR') {
+            return res.status(500).json({ mensagem: "ERRO: Confira usuario e senha na conexão" })
+        } else if (err instanceof Error && 'code' in err && err.code === 'ER_PARSE_ERROR') {
+            return res.status(500).json({ mensagem: "ERRO: Você tem um erro na sua SQL, confira o Execute" })
+        } else if (err instanceof Error && 'code' in err && err.code === 'ER_NO_SUCH_TABLE') {
+            return res.status(500).json({ mensagem: "ERRO: Você digitou o nome da tabela errado, confira o Execute!" })
+        } else {
+            return res.status(500).json({ mensagem: "ERRO: Desconhecido!" })
+        }
     }
 })
 app.post("/pessoas", async (req, res) => {
-    //Pegar as informações do usuário   => REQ.body
-    //inserir
-
     const { id, nome } = req.body
-
-    //Validem o id e nome para não serem vazios.
-
     try {
         const [result] =
             await connection
                 .execute<ResultSetHeader>('INSERT INTO pessoa VALUES (?,?)', [id, nome])
-        //Retornar algo que indique que deu certo
-         if (result.affectedRows === 0) 
+        if (result.affectedRows === 0)
             return res.status(500).json({ mensagem: "Erro ao inserir!" })
         return res.status(201).json({ mensagem: "Sucesso ao inserir!" })
-        
-    }catch(err){
-        return res.status(500).json({ mensagem: "Erro ao inserir!" })
+
+    } catch (err) {
+        console.log(err)
+        if (err instanceof Error && 'code' in err && err.code === 'ECONNREFUSED') {
+            return res.status(500).json({ mensagem: "ERRO: LIGUE O LARAGON e confira o usuário e senha da conexão" })
+        } else if (err instanceof Error && 'code' in err && err.code === 'ENOTFOUND') {
+            return res.status(500).json({ mensagem: "ERRO: Você digitou algo errado no host da conexão" })
+        } else if (err instanceof Error && 'code' in err && err.code === 'ER_BAD_DB_ERROR') {
+            return res.status(500).json({ mensagem: "ERRO: Confira o nome do banco de dados ou crie um banco com o nome que você passou na conexão" })
+        } else if (err instanceof Error && 'code' in err && err.code === 'ER_ACCESS_DENIED_ERROR') {
+            return res.status(500).json({ mensagem: "ERRO: Confira usuario e senha na conexão" })
+        } else if (err instanceof Error && 'code' in err && err.code === 'ER_PARSE_ERROR') {
+            return res.status(500).json({ mensagem: "ERRO: Você tem um erro na sua SQL, confira o Execute" })
+        } else if (err instanceof Error && 'code' in err && err.code === 'ER_NO_SUCH_TABLE') {
+            return res.status(500).json({ mensagem: "ERRO: Você digitou o nome da tabela errado, confira o Execute!" })
+        } else {
+            return res.status(500).json({ mensagem: "ERRO: Desconhecido!" })
+        }
     }
-    
 })
 app.listen(8000, () => {
     console.log("Iniciando o servidor na porta 8000")
 })
-
